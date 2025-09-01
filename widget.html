@@ -5,35 +5,40 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Botpress Widget</title>
 
+  <!-- Transparent page + remove Botpress launcher & white backgrounds -->
   <style>
     html, body { margin:0; padding:0; background:transparent !important; }
-    /* Hide Botpress's round floating button so only your site button is used */
-    .bpw-widget-btn,
-    .bpw-floating-button,
-    .bpw-floating-button-container { display:none !important; }
 
-    /* Transparent background for seamless iframe look */
+    /* Remove any default white card/backgrounds */
     .bpw-root,
     .bpw-container,
     .bpw-chat,
-    .bpw-chat-container { background:transparent !important; }
+    .bpw-chat-container { background: transparent !important; }
+
+    /* HIDE Botpress's own circular launcher completely */
+    .bpw-widget-btn,
+    .bpw-floating-button,
+    .bpw-floating-button-container { display: none !important; }
   </style>
 
-  <!-- Botpress Webchat scripts (keep these as-is) -->
+  <!-- Keep your CURRENT working Botpress includes -->
+  <!-- v3.2 injector + your config bundle -->
   <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/07/25/10/20250725100013-77H5717M.js" defer></script>
 </head>
 <body>
   <script>
-    // Auto-open the chat panel when the widget loads
-    (function openWhenReady(){
-      var tries=0, max=40;
-      var t=setInterval(function(){
-        if(window.botpressWebChat && window.botpressWebChat.sendEvent){
-          window.botpressWebChat.sendEvent({ type:'show' });
-          clearInterval(t);
-        }
-        if(++tries >= max) clearInterval(t);
+    // Auto-open the chat panel as soon as Botpress SDK is ready
+    (function openWhenReady() {
+      var tries = 0, max = 40; // ~12s total
+      var t = setInterval(function () {
+        try {
+          if (window.botpressWebChat && window.botpressWebChat.sendEvent) {
+            window.botpressWebChat.sendEvent({ type: 'show' });
+            clearInterval(t);
+          }
+        } catch (e) {}
+        if (++tries >= max) clearInterval(t);
       }, 300);
     })();
   </script>
